@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZewarHub Pakistan | Multi-Vendor AI Jewellery Marketplace</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            850: '#063d2e',
+                            900: '#03281e',
+                            950: '#011812',
+                        },
+                        gold: {
+                            300: '#f3e5ab',
+                            400: '#e6ca65',
+                            500: '#d4af37',
+                            600: '#aa8c2c',
+                            700: '#80681e',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Admin Dashboard Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-serif-custom { font-family: 'Playfair Display', serif; }
+        .bg-emerald-gradient { background: linear-gradient(135deg, #03281e 0%, #063d2e 60%, #0c4d3b 100%); }
+        .gold-border-gradient { border-image: linear-gradient(to right, #d4af37, #f3e5ab, #aa8c2c) 1; }
+        .gold-text { background: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #aa8c2c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col">
+
+    <!-- Top Global Switcher Navigation -->
+    <header class="bg-emerald-950 text-white border-b border-gold-500/30 sticky top-0 z-50 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('shopper')">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-gold-600 via-gold-400 to-gold-300 flex items-center justify-center shadow-lg border border-gold-300">
+                        <i class="fa-solid font-bold text-emerald-950 text-lg">💎</i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-serif-custom font-bold tracking-wider gold-text block leading-tight">ZewarHub</span>
+                        <span class="text-[10px] text-gold-300/80 tracking-widest uppercase block -mt-1">Pakistan's B2C Jewellery Portal</span>
+                    </div>
+                </div>
+
+                <!-- View Switcher Tabs (Shopper, Seller, Super-Admin AI) -->
+                <nav class="hidden md:flex bg-emerald-900/80 p-1.5 rounded-xl border border-gold-500/30 space-x-1">
+                    <button id="nav-shopper" onclick="switchTab('shopper')" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 bg-gold-500 text-emerald-950 shadow-md">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>Shopper Storefront</span>
+                    </button>
+                    <button id="nav-seller" onclick="switchTab('seller')" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-emerald-800 transition-all duration-200 flex items-center space-x-2">
+                        <i class="fa-solid fa-store"></i>
+                        <span>Vendor Portal</span>
+                        <span class="bg-gold-500/20 text-gold-300 text-[10px] px-2 py-0.5 rounded-full border border-gold-500/30">Shop Admin</span>
+                    </button>
+                    <button id="nav-admin" onclick="switchTab('admin')" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-emerald-800 transition-all duration-200 flex items-center space-x-2">
+                        <i class="fa-solid fa-brain text-gold-400"></i>
+                        <span>AI Command Center</span>
+                        <span class="bg-emerald-500/20 text-emerald-300 text-[10px] px-2 py-0.5 rounded-full border border-emerald-500/30">Super-Admin</span>
+                    </button>
+                </nav>
+
+                <!-- Action Controls & Pitch Deck Button -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="openPitchModal()" class="px-3.5 py-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-emerald-950 font-semibold text-xs rounded-lg transition shadow-md flex items-center space-x-1.5">
+                        <i class="fa-solid fa-file-powerpoint text-sm"></i>
+                        <span class="hidden sm:inline">Investor Pitch Deck</span>
+                    </button>
+                    
+                    <div id="shopper-header-actions" class="flex items-center space-x-2">
+                        <button onclick="openTryOnModal()" class="p-2 text-gold-400 hover:text-gold-300 hover:bg-emerald-900/50 rounded-lg transition relative" title="AI Virtual Try-On Canvas">
+                            <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                        </button>
+                        <button onclick="toggleCartDrawer()" class="p-2 text-white hover:bg-emerald-900/50 rounded-lg transition relative">
+                            <i class="fa-solid fa-shopping-bag text-lg"></i>
+                            <span id="cart-badge-count" class="absolute -top-1 -right-1 bg-gold-500 text-emerald-950 font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-emerald-950">0</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile View Navigation Bar -->
+        <div class="md:hidden flex border-t border-emerald-800/80 bg-emerald-950 px-2 py-2 overflow-x-auto justify-around space-x-1">
+            <button id="mobile-nav-shopper" onclick="switchTab('shopper')" class="px-3 py-1.5 rounded-md text-xs font-medium bg-gold-500 text-emerald-950 whitespace-nowrap">Shopper</button>
+            <button id="mobile-nav-seller" onclick="switchTab('seller')" class="px-3 py-1.5 rounded-md text-xs font-medium text-gray-300 whitespace-nowrap">Vendor Portal</button>
+            <button id="mobile-nav-admin" onclick="switchTab('admin')" class="px-3 py-1.5 rounded-md text-xs font-medium text-gray-300 whitespace-nowrap">AI Admin Hub</button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+
+        <!-- ========================================== -->
+        <!-- VIEW 1: SHOPPER STOREFRONT (END USER)      -->
+        <!-- ========================================== -->
+        <div id="view-shopper" class="block">
+            <!-- Hero Banner -->
+            <section class="relative bg-emerald-gradient text-white py-12 md:py-20 px-4 overflow-hidden border-b border-gold-500/20">
+                <div class="absolute -right-20 -top-20 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center relative z-10">
+                    <div class="space-y-5 text-center md:text-left">
+                        <span class="inline-block px-3 py-1 bg-gold-500/20 text-gold-300 text-xs font-semibold rounded-full border border-gold-500/30">
+                            ✨ Pakistan's #1 Multi-Vendor Jewellery Destination
+                        </span>
+                        <h1 class="text-3xl md:text-5xl font-bold font-serif-custom leading-tight text-white">
+                            Exquisite Artificial Jewellery From Top Artisans Across Pakistan
+                        </h1>
+                        <p class="text-gray-300 text-sm md:text-base max-w-xl">
+                            Discover bridal sets, polki kundan, oxidized silver, zircon earrings, and velvet chokers. Direct from verified sellers in Lahore, Karachi, Peshawar, & Islamabad.
+                        </p>
+                        
+                        <!-- AI Quick Prompt trigger -->
+                        <div class="flex flex-col sm:flex-row gap-3 pt-2 justify-center md:justify-start">
+                            <button onclick="openAiChat('I need a Kundan bridal set under 12,000 PKR for a Mehendi ceremony')" class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-emerald-950 font-semibold px-6 py-3 rounded-xl transition shadow-lg flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-sparkles"></i>
+                                <span>Ask AI Jewellery Stylist</span>
+                            </button>
+                            <button onclick="openTryOnModal()" class="bg-emerald-900/80 border border-gold-500/50 hover:bg-emerald-800 text-white font-medium px-6 py-3 rounded-xl transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-camera"></i>
+                                <span>Try Virtual Canvas Studio</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hero Visual Showcase -->
+                    <div class="grid grid-cols-2 gap-4 relative">
+                        <div class="space-y-4">
+                            <div class="bg-emerald-900/40 p-2 rounded-2xl border border-gold-500/30 shadow-2xl overflow-hidden group">
+                                <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&auto=format&fit=crop&q=80" alt="Kundan Set" class="rounded-xl object-cover h-48 w-full group-hover:scale-105 transition duration-500">
+                                <div class="p-2 text-center">
+                                    <p class="text-xs font-semibold gold-text">Royal Kundan Choker</p>
+                                    <p class="text-[11px] text-gray-300">PKR 8,500</p>
+                                </div>
+                            </div>
+                            <div class="bg-emerald-900/40 p-2 rounded-2xl border border-gold-500/30 shadow-2xl overflow-hidden group">
+                                <img src="https://images.unsplash.com/photo-1630019852942-f89202989a59?w=600&auto=format&fit=crop&q=80" alt="Polki Earrings" class="rounded-xl object-cover h-36 w-full group-hover:scale-105 transition duration-500">
+                                <div class="p-2 text-center">
+                                    <p class="text-xs font-semibold gold-text">Zircon Drop Earrings</p>
+                                    <p class="text-[11px] text-gray-300">PKR 3,200</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4 pt-6">
+                            <div class="bg-emerald-900/40 p-2 rounded-2xl border border-gold-500/30 shadow-2xl overflow-hidden group">
+                                <img src="https://images.unsplash.com/photo-1611591475167-be08c7883e82?w=600&auto=format&fit=crop&q=80" alt="Bangles" class="rounded-xl object-cover h-36 w-full group-hover:scale-105 transition duration-500">
+                                <div class="p-2 text-center">
+                                    <p class="text-xs font-semibold gold-text">Oxidized Silver Kara Set</p>
+                                    <p class="text-[11px] text-gray-300">PKR 2,800</p>
+                                </div>
+                            </div>
+                            <div class="bg-emerald-900/40 p-2 rounded-2xl border border-gold-500/30 shadow-2xl overflow-hidden group">
+                                <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&auto=format&fit=crop&q=80" alt="Ring" class="rounded-xl object-cover h-48 w-full group-hover:scale-105 transition duration-500">
+                                <div class="p-2 text-center">
+                                    <p class="text-xs font-semibold gold-text">Bridal Matha Patti & Ring</p>
+                                    <p class="text-[11px] text-gray-300">PKR 14,000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Product Marketplace Grid & Filters Section -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold font-serif-custom text-emerald-950">Curated Pakistani Artificial Collections</h2>
+                        <p class="text-xs text-gray-500">Handcrafted, brass-plated, high-grade zircon & traditional Kundan craft</p>
+                    </div>
+
+                    <!-- Category Pills -->
+                    <div class="flex items-center space-x-2 overflow-x-auto pb-2 md:pb-0 custom-scrollbar" id="category-pills">
+                        <button onclick="filterCategory('All')" class="category-btn active bg-emerald-950 text-gold-400 px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shadow-sm border border-gold-500/30">All Items</button>
+                        <button onclick="filterCategory('Bridal Sets')" class="category-btn bg-white text-gray-700 hover:bg-emerald-50 px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border border-gray-200">Bridal Sets</button>
+                        <button onclick="filterCategory('Kundan & Polki')" class="category-btn bg-white text-gray-700 hover:bg-emerald-50 px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border border-gray-200">Kundan & Polki</button>
+                        <button onclick="filterCategory('Zircon Earrings')" class="category-btn bg-white text-gray-700 hover:bg-emerald-50 px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border border-gray-200">Zircon Earrings</button>
+                        <button onclick="filterCategory('Bangles & Karas')" class="category-btn bg-white text-gray-700 hover:bg-emerald-50 px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border border-gray-200">Bangles & Karas</button>
+                        <button onclick="filterCategory('Velvet Chokers')" class="category-btn bg-white text-gray-700 hover:bg-emerald-50 px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border border-gray-200">Velvet Chokers</button>
+                    </div>
+                </div>
+
+                <!-- Search & City Origin Filter Controls -->
+                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="relative">
+                        <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400 text-sm"></i>
+                        <input type="text" id="storefront-search" oninput="renderStorefrontProducts()" placeholder="Search items, shops, or motifs (e.g. Meena, Pearl, Emerald)..." class="w-full pl-9 pr-3 py-2 text-xs border border-gray-300 rounded-lg focus:ring-1 focus:ring-emerald-800 outline-none">
+                    </div>
+                    <div>
+                        <select id="filter-city" onchange="renderStorefrontProducts()" class="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:ring-1 focus:ring-emerald-800 outline-none bg-white">
+                            <option value="All">All Vendor Cities (Karachi, Lahore, Peshawar...)</option>
+                            <option value="Lahore">Lahore Artisans (Anarkali Hub)</option>
+                            <option value="Karachi">Karachi Vendors (Tariq Road)</option>
+                            <option value="Peshawar">Peshawar Jewel Crafts</option>
+                            <option value="Islamabad">Islamabad Luxury Studio</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="filter-price" onchange="renderStorefrontProducts()" class="w-full py-2 px-3 text-xs border border-gray-300 rounded-lg focus:ring-1 focus:ring-emerald-800 outline-none bg-white">
+                            <option value="All">Sort & Price Filter</option>
+                            <option value="low-high">Price: Low to High</option>
+                            <option value="high-low">Price: High to Low</option>
+                            <option value="under-5000">Under 5,000 PKR</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Dynamic Product Cards Injected via JS -->
+                </div>
+            </section>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 2: SELLER / VENDOR PORTAL             -->
+        <!-- ========================================== -->
+        <div id="view-seller" class="hidden bg-gray-100 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto space-y-6">
+                
+                <!-- Vendor Store Header Bar -->
+                <div class="bg-emerald-950 text-white rounded-2xl p-6 border border-gold-500/30 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-lg">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-14 h-14 rounded-full bg-gold-500 text-emerald-950 font-bold text-xl flex items-center justify-center border-2 border-gold-300">
+                            AH
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h2 class="text-xl font-bold font-serif-custom text-gold-300">Anarkali Heritage Jewellers</h2>
+                                <span class="px-2 py-0.5 bg-emerald-800 text-emerald-200 text-[10px] font-semibold rounded-md border border-emerald-600">Verified Seller</span>
+                            </div>
+                            <p class="text-xs text-gray-300 mt-1">Lahore, Punjab • Store ID: <span class="font-mono text-gold-400">ZH-LHR-8821</span> • 4.9 ★ Rating</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                        <button onclick="openAddProductModal()" class="flex-1 md:flex-none px-4 py-2 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-emerald-950 font-semibold text-xs rounded-lg transition shadow-md flex items-center justify-center space-x-1.5">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>List New Article</span>
+                        </button>
+                        <button onclick="generateVendorAiReport()" class="flex-1 md:flex-none px-4 py-2 bg-emerald-800 hover:bg-emerald-700 border border-gold-500/40 text-gold-300 font-medium text-xs rounded-lg transition flex items-center justify-center space-x-1.5">
+                            <i class="fa-solid fa-brain"></i>
+                            <span>Run AI Shop Diagnostics</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Vendor Metrics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium">Monthly Revenue</p>
+                            <h3 class="text-2xl font-bold text-emerald-950 mt-1">PKR 485,000</h3>
+                            <span class="text-[11px] text-emerald-600 font-medium">↑ 18.4% vs last month</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center text-lg">
+                            💰
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium">Total Orders Executed</p>
+                            <h3 class="text-2xl font-bold text-emerald-950 mt-1">142 Orders</h3>
+                            <span class="text-[11px] text-emerald-600 font-medium">96.4% Fulfillment Rate</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center text-lg">
+                            📦
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium">Active Listings</p>
+                            <h3 class="text-2xl font-bold text-emerald-950 mt-1">28 Articles</h3>
+                            <span class="text-[11px] text-amber-600 font-medium">2 Low Stock Alerts</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center text-lg">
+                            ✨
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium">Pending Payouts</p>
+                            <h3 class="text-2xl font-bold text-emerald-950 mt-1">PKR 92,400</h3>
+                            <span class="text-[11px] text-gray-500">Auto-clears via JazzCash/Bank</span>
+                        </div>
+                        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center text-lg">
+                            🏦
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seller Tab Controls (Inventory vs Orders) -->
+                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div class="border-b border-gray-200 bg-gray-50/50 px-6 py-4 flex items-center justify-between">
+                        <div class="flex space-x-4">
+                            <button onclick="toggleVendorTab('inventory')" id="tab-btn-inventory" class="text-sm font-bold text-emerald-950 border-b-2 border-emerald-950 pb-1">Store Inventory (28)</button>
+                            <button onclick="toggleVendorTab('orders')" id="tab-btn-orders" class="text-sm font-medium text-gray-500 hover:text-gray-800 pb-1">Customer Orders (Live)</button>
+                        </div>
+                        <span class="text-xs text-gray-500 hidden sm:inline">Real-time Synchronization</span>
+                    </div>
+
+                    <!-- Inventory Table Sub-view -->
+                    <div id="vendor-subview-inventory" class="p-6 overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-[11px] uppercase tracking-wider text-gray-500 border-b border-gray-200 bg-gray-50/80">
+                                    <th class="py-3 px-4">Article</th>
+                                    <th class="py-3 px-4">Category</th>
+                                    <th class="py-3 px-4">Price (PKR)</th>
+                                    <th class="py-3 px-4">Stock</th>
+                                    <th class="py-3 px-4">AI Pricing Recommendation</th>
+                                    <th class="py-3 px-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendor-inventory-body" class="divide-y divide-gray-200 text-xs">
+                                <!-- Dynamic rows populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Orders Table Sub-view -->
+                    <div id="vendor-subview-orders" class="p-6 overflow-x-auto hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-[11px] uppercase tracking-wider text-gray-500 border-b border-gray-200 bg-gray-50/80">
+                                    <th class="py-3 px-4">Order ID</th>
+                                    <th class="py-3 px-4">Customer & City</th>
+                                    <th class="py-3 px-4">Articles Ordered</th>
+                                    <th class="py-3 px-4">Total Amount</th>
+                                    <th class="py-3 px-4">Payment Method</th>
+                                    <th class="py-3 px-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vendor-orders-body" class="divide-y divide-gray-200 text-xs">
+                                <!-- Dynamic order rows populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VIEW 3: SUPER-ADMIN AI COMMAND CENTER      -->
+        <!-- ========================================== -->
+        <div id="view-admin" class="hidden bg-emerald-950 text-white min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto space-y-8">
+                
+                <!-- Admin Header -->
+                <div class="border-b border-gold-500/30 pb-6 flex flex-col md:flex-row justify-between md:items-center gap-4">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2.5 py-1 bg-gold-500/20 text-gold-300 text-xs rounded-full border border-gold-500/30 font-semibold">
+                                🤖 Autonomous Multi-Store AI Intelligence Engine
+                            </span>
+                        </div>
+                        <h1 class="text-3xl font-serif-custom font-bold text-white mt-2">ZewarHub Central Command Center</h1>
+                        <p class="text-xs text-gray-300">Overseeing 48 active jewelry vendors across Pakistan • Gemini 3 Flash Analytics Active</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="runMasterAiAudit()" class="px-5 py-2.5 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 text-emerald-950 font-bold text-xs rounded-xl shadow-lg transition flex items-center space-x-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Generate Platform AI Intelligence Report</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Market Trend & Price Optimizer Banner (Unique Investor Feature) -->
+                <div class="bg-gradient-to-r from-emerald-900 via-emerald-850 to-emerald-900 p-6 rounded-2xl border border-gold-500/30 shadow-2xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-gold-500/20 border border-gold-500/40 flex items-center justify-center text-gold-300 text-lg">
+                                📈
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold gold-text font-serif-custom">Pakistani Wedding Season AI Trend & Demand Predictor</h3>
+                                <p class="text-xs text-gray-300">Real-time analysis comparing actual sales vs customer search terms</p>
+                            </div>
+                        </div>
+                        <span class="text-xs bg-emerald-800 text-gold-300 px-3 py-1 rounded-full border border-gold-500/30">Q4 Wedding Surge Active</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                        <div class="bg-emerald-950/80 p-4 rounded-xl border border-emerald-800">
+                            <p class="text-xs text-gray-400">🔥 High Demand - Supply Deficit</p>
+                            <p class="text-sm font-semibold text-gold-300 mt-1">Velvet Chokers & Bottle Green Kundan</p>
+                            <p class="text-[11px] text-gray-300 mt-2">Searches up <span class="text-emerald-400 font-bold">+340%</span>. Recommendation: Onboard 5 additional Vendors from Rawalpindi/Karachi.</p>
+                        </div>
+                        <div class="bg-emerald-950/80 p-4 rounded-xl border border-emerald-800">
+                            <p class="text-xs text-gray-400">⚡ Price Optimization Signal</p>
+                            <p class="text-sm font-semibold text-gold-300 mt-1">Zircon Matha Pattis</p>
+                            <p class="text-[11px] text-gray-300 mt-2">Current avg listing: 12,000 PKR. Optimal selling price window: <span class="text-gold-400 font-bold">8,500 - 9,800 PKR</span> for 3x conversion boost.</p>
+                        </div>
+                        <div class="bg-emerald-950/80 p-4 rounded-xl border border-emerald-800">
+                            <p class="text-xs text-gray-400">🛡️ Return / Fraud Anomaly Alert</p>
+                            <p class="text-sm font-semibold text-rose-300 mt-1">Transit Damage Risk (Peshawar Route)</p>
+                            <p class="text-[11px] text-gray-300 mt-2">Fragile glass Kundan items show <span class="text-rose-400 font-bold">12% return rate</span> due to standard courier boxes. Enforce bubble packaging rule.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Analytics Charts Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Chart 1: Revenue vs Orders per City -->
+                    <div class="bg-emerald-900/40 p-6 rounded-2xl border border-gold-500/20 shadow-xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold gold-text uppercase tracking-wider">Regional Market Performance (PKR Volume)</h3>
+                            <span class="text-xs text-gray-400">Karachi, Lahore, RWP, Peshawar</span>
+                        </div>
+                        <div class="h-64 relative">
+                            <canvas id="chart-regional"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Most Sold vs Most Searched Articles (Demand Gap) -->
+                    <div class="bg-emerald-900/40 p-6 rounded-2xl border border-gold-500/20 shadow-xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold gold-text uppercase tracking-wider">Most Sold vs Most Searched Articles</h3>
+                            <span class="text-xs text-gray-400">Demand Gap Analytics</span>
+                        </div>
+                        <div class="h-64 relative">
+                            <canvas id="chart-demand-gap"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic AI Markdown/Report Output Box -->
+                <div class="bg-emerald-900/60 p-6 rounded-2xl border border-gold-500/40 shadow-2xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-emerald-800 pb-4">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-file-contract text-gold-400 text-lg"></i>
+                            <h3 class="text-base font-bold text-white font-serif-custom">Generated AI Intelligence Report</h3>
+                        </div>
+                        <button onclick="copyAiReportText()" class="px-3 py-1 bg-emerald-800 hover:bg-emerald-700 text-gold-300 text-xs rounded-lg transition border border-gold-500/30">
+                            <i class="fa-solid fa-copy mr-1"></i> Copy Report
+                        </button>
+                    </div>
+
+                    <div id="ai-report-container" class="prose prose-invert max-w-none text-xs leading-relaxed font-mono bg-emerald-950 p-5 rounded-xl border border-emerald-800/80 text-gray-300 overflow-y-auto max-h-96 custom-scrollbar">
+                        <p class="text-gray-400 italic">Click "Generate Platform AI Intelligence Report" above or "Run AI Shop Diagnostics" in vendor mode to produce a comprehensive markdown report analyzing customer orders, cancellation causes, top searches, and profit strategy.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    
+    <!-- AI STYLIST & SEARCH FLOATING ASSISTANT MODAL -->
+    <div id="ai-chat-modal" class="fixed bottom-6 right-6 w-96 max-w-[calc(100vw-2rem)] bg-emerald-950 border-2 border-gold-500/50 rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col hidden transition-all duration-300" style="height: 520px;">
+        <div class="bg-emerald-900 p-4 border-b border-gold-500/30 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-gold-500 text-emerald-950 flex items-center justify-center font-bold text-xs">
+                    🤖
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-white">Zewar AI Personal Stylist</h3>
+                    <p class="text-[10px] text-gold-300">Grounded in Pakistan artificial jewellery catalog</p>
+                </div>
+            </div>
+            <button onclick="toggleAiChat()" class="text-gray-400 hover:text-white text-lg">✕</button>
+        </div>
+
+        <div id="chat-messages" class="flex-grow p-4 space-y-3 overflow-y-auto custom-scrollbar text-xs">
+            <div class="bg-emerald-900/60 p-3 rounded-xl border border-gold-500/20 text-gray-200">
+                Assalamu Alaikum! I am your AI Jewellery Assistant. Tell me your budget in PKR, outfit color, or event (e.g. Barat, Mehendi, Walima, Everyday) and I'll find matching sets!
+            </div>
+        </div>
+
+        <div class="p-3 bg-emerald-900/80 border-t border-gold-500/20 space-y-2">
+            <!-- Quick Suggestion Chips -->
+            <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-[10px]">
+                <button onclick="sendQuickPrompt('Kundan choker under 8,000 PKR')" class="bg-emerald-950 text-gold-300 px-2.5 py-1 rounded-full border border-gold-500/30 whitespace-nowrap hover:bg-emerald-800">Kundan under 8k</button>
+                <button onclick="sendQuickPrompt('Green velvet bridal set for Mehendi')" class="bg-emerald-950 text-gold-300 px-2.5 py-1 rounded-full border border-gold-500/30 whitespace-nowrap hover:bg-emerald-800">Green Mehendi Set</button>
+                <button onclick="sendQuickPrompt('Lightweight zircon earrings')" class="bg-emerald-950 text-gold-300 px-2.5 py-1 rounded-full border border-gold-500/30 whitespace-nowrap hover:bg-emerald-800">Zircon Earrings</button>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <input type="text" id="chat-input" onkeydown="if(event.key==='Enter') sendChatMessage()" placeholder="Describe what you're looking for..." class="flex-grow bg-emerald-950 text-white text-xs px-3 py-2 rounded-xl border border-gold-500/30 outline-none focus:border-gold-400">
+                <button onclick="sendChatMessage()" class="bg-gold-500 hover:bg-gold-400 text-emerald-950 px-3 py-2 rounded-xl font-bold text-xs transition">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI VIRTUAL TRY-ON CANVAS STUDIO MODAL (UNIQUE FEATURE) -->
+    <div id="tryon-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-emerald-950 border border-gold-500/40 rounded-2xl max-w-4xl w-full p-6 text-white space-y-6 relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closeTryOnModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">✕</button>
+
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 bg-gold-500/20 text-gold-300 text-[10px] rounded border border-gold-500/30 uppercase font-bold">Interactive Feature</span>
+                </div>
+                <h2 class="text-2xl font-bold font-serif-custom text-gold-300 mt-1">AI Virtual Jewellery Try-On Studio</h2>
+                <p class="text-xs text-gray-300">Choose or upload a neck silhouette model and interactively drag, drop, & resize artificial jewellery onto it!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Canvas Area -->
+                <div class="md:col-span-2 bg-emerald-900/50 rounded-xl p-4 border border-gold-500/20 flex flex-col items-center justify-center relative min-h-[380px]">
+                    <div id="canvas-container" class="relative w-full max-w-sm h-80 bg-gray-900 rounded-lg overflow-hidden border border-gold-500/30 flex items-center justify-center">
+                        <img id="model-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80" alt="Model Face Neckline" class="absolute inset-0 w-full h-full object-cover opacity-90 pointer-events-none">
+                        
+                        <!-- Overlay Draggable Jewellery Piece -->
+                        <div id="draggable-jewel" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-move select-none transition-transform" style="width: 140px;">
+                            <img id="overlay-jewel-img" src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&auto=format&fit=crop&q=80" class="w-full drop-shadow-2xl filter brightness-110">
+                        </div>
+                    </div>
+
+                    <!-- Canvas Interactive Controls -->
+                    <div class="mt-4 flex items-center space-x-4 text-xs">
+                        <label class="flex items-center space-x-1">
+                            <span>Scale:</span>
+                            <input type="range" id="jewel-scale" min="50" max="250" value="140" oninput="adjustJewelScale(this.value)" class="w-24">
+                        </label>
+                        <button onclick="resetJewelPosition()" class="bg-emerald-800 text-gold-300 px-3 py-1 rounded border border-gold-500/30 hover:bg-emerald-700">Center Position</button>
+                    </div>
+                </div>
+
+                <!-- Selector Sidebar -->
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs font-semibold text-gold-300 mb-2">1. Select Neckline Model:</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="changeModel('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80')" class="border border-gold-500/30 rounded-lg overflow-hidden hover:opacity-80">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" class="h-14 w-full object-cover">
+                            </button>
+                            <button onclick="changeModel('https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&auto=format&fit=crop&q=80')" class="border border-gold-500/30 rounded-lg overflow-hidden hover:opacity-80">
+                                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80" class="h-14 w-full object-cover">
+                            </button>
+                            <button onclick="changeModel('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80')" class="border border-gold-500/30 rounded-lg overflow-hidden hover:opacity-80">
+                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80" class="h-14 w-full object-cover">
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-semibold text-gold-300 mb-2">2. Overlay Jewellery Item:</p>
+                        <div class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-1" id="tryon-item-list">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <button onclick="alert('Virtual look saved to your favorites wishlist!')" class="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-emerald-950 font-bold py-2.5 rounded-xl text-xs hover:from-gold-400">
+                        <i class="fa-solid fa-download mr-1"></i> Save Try-On Look
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART & LOCAL PAKISTANI PAYMENT CHECKOUT DRAWER -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="bg-emerald-950 text-white p-4 border-b border-gold-500/30 flex items-center justify-between">
+            <h3 class="font-serif-custom font-bold text-gold-300 text-lg">Your Jewellery Cart</h3>
+            <button onclick="toggleCartDrawer()" class="text-gray-400 hover:text-white text-lg">✕</button>
+        </div>
+
+        <div id="cart-items-container" class="flex-grow p-4 overflow-y-auto space-y-3 custom-scrollbar">
+            <!-- Dynamic Cart Items -->
+        </div>
+
+        <div class="p-4 bg-gray-50 border-t border-gray-200 space-y-4">
+            <div class="space-y-1 text-xs">
+                <div class="flex justify-between text-gray-600">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal">PKR 0</span>
+                </div>
+                <div class="flex justify-between text-gray-600">
+                    <span>Shipping Across Pakistan:</span>
+                    <span>PKR 250 (Free over 5k)</span>
+                </div>
+                <div class="flex justify-between text-emerald-950 font-bold text-sm pt-2 border-t border-gray-200">
+                    <span>Grand Total:</span>
+                    <span id="cart-grandtotal">PKR 0</span>
+                </div>
+            </div>
+
+            <!-- Pakistani Local Payment Gateways Selection -->
+            <div>
+                <p class="text-xs font-semibold text-gray-700 mb-2">Select Payment Method:</p>
+                <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+                    <label class="border border-gray-300 p-2 rounded-lg cursor-pointer bg-white flex flex-col items-center hover:border-emerald-800">
+                        <input type="radio" name="payment" value="Easypaisa" checked class="mb-1 accent-emerald-800">
+                        <span class="font-bold text-emerald-700">Easypaisa</span>
+                    </label>
+                    <label class="border border-gray-300 p-2 rounded-lg cursor-pointer bg-white flex flex-col items-center hover:border-emerald-800">
+                        <input type="radio" name="payment" value="JazzCash" class="mb-1 accent-emerald-800">
+                        <span class="font-bold text-rose-700">JazzCash</span>
+                    </label>
+                    <label class="border border-gray-300 p-2 rounded-lg cursor-pointer bg-white flex flex-col items-center hover:border-emerald-800">
+                        <input type="radio" name="payment" value="COD" class="mb-1 accent-emerald-800">
+                        <span class="font-bold text-gray-800">Cash (COD)</span>
+                    </label>
+                </div>
+            </div>
+
+            <button onclick="executeCheckout()" class="w-full bg-emerald-950 hover:bg-emerald-900 text-gold-300 font-bold py-3 rounded-xl text-xs shadow-lg transition border border-gold-500/30">
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- INVESTOR PITCH DECK & FREE DEPLOYMENT MODAL -->
+    <div id="pitch-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-emerald-950 border border-gold-500/40 rounded-2xl max-w-4xl w-full p-6 text-white space-y-6 relative max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <button onclick="closePitchModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">✕</button>
+
+            <div class="text-center border-b border-emerald-800 pb-4">
+                <span class="px-3 py-1 bg-gold-500/20 text-gold-300 text-xs rounded-full border border-gold-500/30 font-bold">
+                    🚀 Academic & Startup Investor Deck
+                </span>
+                <h2 class="text-3xl font-bold font-serif-custom text-white mt-2">ZewarHub: Democratizing Pakistan's $1.2B Artificial Jewellery Ecosystem</h2>
+                <p class="text-xs text-gray-300 mt-1">Multi-Tenant E-Commerce Platform + Gemini AI Diagnostics + Virtual Canvas Studio</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                <div class="bg-emerald-900/40 p-4 rounded-xl border border-gold-500/20 space-y-3">
+                    <h3 class="font-bold text-gold-300 text-sm font-serif-custom">1. The Market Opportunity in Pakistan</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        With surging real gold prices, Pakistan's wedding artificial jewellery market is expanding at 24% YoY. Traditional jewelers in Lahore, Karachi, and Peshawar lack digital storefronts and AI demand forecasting tools.
+                    </p>
+                </div>
+
+                <div class="bg-emerald-900/40 p-4 rounded-xl border border-gold-500/20 space-y-3">
+                    <h3 class="font-bold text-gold-300 text-sm font-serif-custom">2. Platform Monetization Model</h3>
+                    <ul class="list-disc list-inside text-gray-300 space-y-1">
+                        <li><strong>5% Marketplace Commission</strong> on fulfilled orders.</li>
+                        <li><strong>Vendor Subscriptions</strong> (PKR 2,500/mo for AI pricing tools).</li>
+                        <li><strong>Featured Vendor Placement</strong> in AI recommendation streams.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-emerald-900/40 p-4 rounded-xl border border-gold-500/20 space-y-3">
+                    <h3 class="font-bold text-gold-300 text-sm font-serif-custom">3. Tech Stack Architecture</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        Built with vanilla HTML5/JS + Tailwind CSS, Chart.js for real-time analytics, and standard REST/Fetch integration to <strong>Gemini API (`gemini-3-flash-preview`)</strong> for autonomous shop diagnostic reports.
+                    </p>
+                </div>
+
+                <div class="bg-emerald-900/40 p-4 rounded-xl border border-gold-500/20 space-y-3">
+                    <h3 class="font-bold text-gold-300 text-sm font-serif-custom">4. Free Hosting & Publishing Guide</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        Deploy instantly for your final project presentation:
+                    </p>
+                    <div class="bg-emerald-950 p-2.5 rounded border border-emerald-800 font-mono text-[11px] text-emerald-300">
+                        1. GitHub Pages (Free URL: project.github.io)<br>
+                        2. Netlify / Vercel (1-click upload, zero cost)<br>
+                        3. Firebase Hosting (Free SSL + Database)
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-gold-500 to-gold-600 p-4 rounded-xl text-emerald-950 font-bold flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div>
+                    <p class="text-sm">Ready to deploy and present for startup incubators?</p>
+                    <p class="text-xs font-normal opacity-90">Includes full sample data for Karachi, Lahore, & Peshawar stores.</p>
+                </div>
+                <button onclick="closePitchModal()" class="bg-emerald-950 text-gold-300 px-4 py-2 rounded-lg text-xs font-semibold hover:bg-emerald-900">
+                    Return to Live Platform
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD PRODUCT MODAL (VENDOR) -->
+    <div id="add-product-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 text-gray-900 space-y-4 relative">
+            <button onclick="closeAddProductModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-lg">✕</button>
+            <h3 class="text-lg font-bold font-serif-custom text-emerald-950">List New Artificial Article</h3>
+            
+            <form onsubmit="handleAddProductSubmit(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold mb-1">Article Title</label>
+                    <input type="text" id="new-title" required placeholder="e.g. Royal Meena Kundan Choker Set" class="w-full border border-gray-300 rounded-lg p-2 outline-none focus:ring-1 focus:ring-emerald-800">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold mb-1">Category</label>
+                        <select id="new-category" class="w-full border border-gray-300 rounded-lg p-2 outline-none focus:ring-1 focus:ring-emerald-800 bg-white">
+                            <option>Bridal Sets</option>
+                            <option>Kundan & Polki</option>
+                            <option>Zircon Earrings</option>
+                            <option>Bangles & Karas</option>
+                            <option>Velvet Chokers</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">Price (PKR)</label>
+                        <input type="number" id="new-price" required placeholder="8500" class="w-full border border-gray-300 rounded-lg p-2 outline-none focus:ring-1 focus:ring-emerald-800">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold mb-1">Stock Quantity</label>
+                        <input type="number" id="new-stock" required value="12" class="w-full border border-gray-300 rounded-lg p-2 outline-none focus:ring-1 focus:ring-emerald-800">
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-1">Origin City</label>
+                        <select id="new-city" class="w-full border border-gray-300 rounded-lg p-2 outline-none focus:ring-1 focus:ring-emerald-800 bg-white">
+                            <option>Lahore</option>
+                            <option>Karachi</option>
+                            <option>Peshawar</option>
+                            <option>Islamabad</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Image URL</label>
+                    <input type="url" id="new-image" required value="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&auto=format&fit=crop&q=80" class="w-full border border-gray-300 rounded-lg p-2 outline-none focus:ring-1 focus:ring-emerald-800">
+                </div>
+                <button type="submit" class="w-full bg-emerald-950 hover:bg-emerald-900 text-gold-300 font-bold py-2.5 rounded-xl transition mt-2">
+                    Publish Listing to ZewarHub
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        
+        // Mock Master Jewellery Products Catalog
+        let products = [
+            {
+                id: 'ZH-101',
+                title: 'Royal Anarkali Emerald Kundan Bridal Set',
+                category: 'Bridal Sets',
+                price: 14500,
+                vendor: 'Anarkali Heritage Jewellers',
+                city: 'Lahore',
+                stock: 8,
+                image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&auto=format&fit=crop&q=80',
+                searches: 1240,
+                sales: 42,
+                recPrice: '13,500 PKR (Fast Clearance)'
+            },
+            {
+                id: 'ZH-102',
+                title: 'Polki Diamond & Zircon Drop Earrings',
+                category: 'Zircon Earrings',
+                price: 3200,
+                vendor: 'Tariq Road Artisans',
+                city: 'Karachi',
+                stock: 25,
+                image: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?w=600&auto=format&fit=crop&q=80',
+                searches: 3100,
+                sales: 110,
+                recPrice: '3,400 PKR (High Demand)'
+            },
+            {
+                id: 'ZH-103',
+                title: 'Oxidized Silver Peshawari Kara Set',
+                category: 'Bangles & Karas',
+                price: 2800,
+                vendor: 'Khyber Craft Studio',
+                city: 'Peshawar',
+                stock: 15,
+                image: 'https://images.unsplash.com/photo-1611591475167-be08c7883e82?w=600&auto=format&fit=crop&q=80',
+                searches: 890,
+                sales: 68,
+                recPrice: '2,800 PKR (Optimal)'
+            },
+            {
+                id: 'ZH-104',
+                title: 'Deep Green Velvet Royal Choker Set',
+                category: 'Velvet Chokers',
+                price: 6500,
+                vendor: 'Islamabad Luxury Studio',
+                city: 'Islamabad',
+                stock: 4,
+                image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&auto=format&fit=crop&q=80',
+                searches: 4200,
+                sales: 95,
+                recPrice: '7,200 PKR (High Demand Gap)'
+            },
+            {
+                id: 'ZH-105',
+                title: 'Traditional Gold-Plated Matha Patti',
+                category: 'Kundan & Polki',
+                price: 5400,
+                vendor: 'Anarkali Heritage Jewellers',
+                city: 'Lahore',
+                stock: 18,
+                image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&auto=format&fit=crop&q=80',
+                searches: 1800,
+                sales: 34,
+                recPrice: '4,900 PKR (Competitive Boost)'
+            },
+            {
+                id: 'ZH-106',
+                title: 'Ruby Red Meenakari Jhumka Earrings',
+                category: 'Zircon Earrings',
+                price: 2400,
+                vendor: 'Tariq Road Artisans',
+                city: 'Karachi',
+                stock: 30,
+                image: 'https://images.unsplash.com/photo-1590548784585-643d2b9f2925?w=600&auto=format&fit=crop&q=80',
+                searches: 2100,
+                sales: 88,
+                recPrice: '2,400 PKR (Optimal)'
+            }
+        ];
+
+        // Mock Live Orders for Vendor Portal
+        let orders = [
+            { id: 'ORD-9912', customer: 'Saira Khan (Karachi)', items: 'Royal Anarkali Emerald Kundan', total: 14500, status: 'Shipped', payment: 'Easypaisa' },
+            { id: 'ORD-9913', customer: 'Fatima Zafar (Lahore)', items: 'Polki Diamond Drop Earrings', total: 3200, status: 'Pending COD', payment: 'Cash on Delivery' },
+            { id: 'ORD-9914', customer: 'Zainab Ahmed (Peshawar)', items: 'Deep Green Velvet Choker', total: 6500, status: 'Processing', payment: 'JazzCash' },
+            { id: 'ORD-9915', customer: 'Mariam Ali (Islamabad)', items: 'Oxidized Silver Kara Set', total: 2800, status: 'Cancelled', payment: 'COD (Return Fraud Risk)' }
+        ];
+
+        // Cart State
+        let cart = [];
+        let currentCategory = 'All';
+
+        
+        function switchTab(tab) {
+            document.getElementById('view-shopper').classList.add('hidden');
+            document.getElementById('view-seller').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
+
+            // Reset navigation button highlights
+            const navs = ['shopper', 'seller', 'admin'];
+            navs.forEach(n => {
+                const btn = document.getElementById(`nav-${n}`);
+                if (btn) {
+                    btn.className = "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-emerald-800 transition-all duration-200 flex items-center space-x-2";
+                }
+            });
+
+            if (tab === 'shopper') {
+                document.getElementById('view-shopper').classList.remove('hidden');
+                document.getElementById('nav-shopper').className = "px-4 py-2 rounded-lg text-sm font-medium bg-gold-500 text-emerald-950 shadow-md flex items-center space-x-2";
+            } else if (tab === 'seller') {
+                document.getElementById('view-seller').classList.remove('hidden');
+                document.getElementById('nav-seller').className = "px-4 py-2 rounded-lg text-sm font-medium bg-gold-500 text-emerald-950 shadow-md flex items-center space-x-2";
+                renderVendorViews();
+            } else if (tab === 'admin') {
+                document.getElementById('view-admin').classList.remove('hidden');
+                document.getElementById('nav-admin').className = "px-4 py-2 rounded-lg text-sm font-medium bg-gold-500 text-emerald-950 shadow-md flex items-center space-x-2";
+                initAdminCharts();
+            }
+        }
+
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('#category-pills button').forEach(btn => {
+                btn.className = "category-btn bg-white text-gray-700 hover:bg-emerald-50 px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border border-gray-200";
+            });
+            event.target.className = "category-btn active bg-emerald-950 text-gold-400 px-4 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shadow-sm border border-gold-500/30";
+            renderStorefrontProducts();
+        }
+
+        function renderStorefrontProducts() {
+            const grid = document.getElementById('products-grid');
+            const searchVal = document.getElementById('storefront-search').value.toLowerCase();
+            const cityVal = document.getElementById('filter-city').value;
+            const priceVal = document.getElementById('filter-price').value;
+
+            let filtered = products.filter(p => {
+                const matchesCat = (currentCategory === 'All' || p.category === currentCategory);
+                const matchesSearch = p.title.toLowerCase().includes(searchVal) || p.vendor.toLowerCase().includes(searchVal);
+                const matchesCity = (cityVal === 'All' || p.city === cityVal);
+                return matchesCat && matchesSearch && matchesCity;
+            });
+
+            if (priceVal === 'low-high') filtered.sort((a,b) => a.price - b.price);
+            if (priceVal === 'high-low') filtered.sort((a,b) => b.price - a.price);
+            if (priceVal === 'under-5000') filtered = filtered.filter(p => p.price <= 5000);
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+                    <div class="relative overflow-hidden h-52 bg-gray-100">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 left-3 bg-emerald-950/90 backdrop-blur-md text-gold-300 text-[10px] font-semibold px-2.5 py-1 rounded-full border border-gold-500/30">
+                            ${p.city} • ${p.vendor}
+                        </span>
+                    </div>
+                    <div class="p-4 flex-grow flex flex-col justify-between space-y-3">
+                        <div>
+                            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-wider">${p.category}</span>
+                            <h3 class="text-sm font-bold text-gray-900 group-hover:text-emerald-800 transition line-clamp-1">${p.title}</h3>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                            <div>
+                                <span class="text-xs text-gray-400 block -mb-1">Price</span>
+                                <span class="text-base font-bold text-emerald-950">PKR ${p.price.toLocaleString()}</span>
+                            </div>
+                            <div class="flex space-x-1">
+                                <button onclick="openTryOnWithItem('${p.image}')" title="Virtual Try On" class="p-2 text-emerald-900 hover:bg-emerald-50 rounded-lg transition border border-emerald-200 text-xs">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                </button>
+                                <button onclick="addToCart('${p.id}')" class="px-3 py-1.5 bg-emerald-950 hover:bg-emerald-900 text-gold-300 font-bold rounded-lg text-xs shadow transition">
+                                    + Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+
+        function addToCart(productId) {
+            const item = products.find(p => p.id === productId);
+            if (item) {
+                cart.push(item);
+                updateCartUI();
+                toggleCartDrawer(true);
+            }
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-badge-count').innerText = cart.length;
+            const container = document.getElementById('cart-items-container');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 text-center py-10">Your shopping bag is empty.</p>`;
+                document.getElementById('cart-subtotal').innerText = 'PKR 0';
+                document.getElementById('cart-grandtotal').innerText = 'PKR 0';
+                return;
+            }
+
+            let subtotal = 0;
+            container.innerHTML = cart.map((item, index) => {
+                subtotal += item.price;
+                return `
+                    <div class="flex items-center space-x-3 bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                        <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg">
+                        <div class="flex-grow text-xs">
+                            <h4 class="font-bold text-gray-800 line-clamp-1">${item.title}</h4>
+                            <p class="text-emerald-800 font-semibold mt-0.5">PKR ${item.price.toLocaleString()}</p>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-rose-500 hover:text-rose-700 text-xs px-2">✕</button>
+                    </div>
+                `;
+            }).join('');
+
+            const grandTotal = subtotal > 5000 ? subtotal : subtotal + 250;
+            document.getElementById('cart-subtotal').innerText = `PKR ${subtotal.toLocaleString()}`;
+            document.getElementById('cart-grandtotal').innerText = `PKR ${grandTotal.toLocaleString()}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCartDrawer(forceOpen = false) {
+            const drawer = document.getElementById('cart-drawer');
+            if (forceOpen || drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
+            } else {
+                drawer.classList.add('translate-x-full');
+            }
+        }
+
+        function executeCheckout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+            alert(`Order Placed Successfully via ${paymentMethod}! A tracking notification will be sent to your Pakistani mobile number.`);
+            cart = [];
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+
+        function renderVendorViews() {
+            // Populate Inventory Subview
+            const invBody = document.getElementById('vendor-inventory-body');
+            invBody.innerHTML = products.map(p => `
+                <tr class="hover:bg-gray-50">
+                    <td class="py-3 px-4 flex items-center space-x-3">
+                        <img src="${p.image}" class="w-10 h-10 object-cover rounded-md border border-gray-200">
+                        <div>
+                            <p class="font-bold text-gray-900">${p.title}</p>
+                            <p class="text-[10px] text-gray-400">SKU: ${p.id}</p>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 font-medium text-gray-700">${p.category}</td>
+                    <td class="py-3 px-4 font-bold text-emerald-950">PKR ${p.price.toLocaleString()}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 ${p.stock < 10 ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'} rounded text-[10px] font-semibold">
+                            ${p.stock} units
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-emerald-800 font-medium">${p.recPrice}</td>
+                    <td class="py-3 px-4 text-right space-x-2">
+                        <button onclick="alert('Pricing updated according to AI recommendation')" class="text-xs bg-emerald-950 text-gold-300 px-2.5 py-1 rounded">Apply AI Price</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Populate Orders Subview
+            const ordBody = document.getElementById('vendor-orders-body');
+            ordBody.innerHTML = orders.map(o => `
+                <tr class="hover:bg-gray-50">
+                    <td class="py-3 px-4 font-mono font-bold text-emerald-900">${o.id}</td>
+                    <td class="py-3 px-4 font-medium">${o.customer}</td>
+                    <td class="py-3 px-4 text-gray-600">${o.items}</td>
+                    <td class="py-3 px-4 font-bold text-emerald-950">PKR ${o.total.toLocaleString()}</td>
+                    <td class="py-3 px-4">${o.payment}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${o.status === 'Shipped' ? 'bg-emerald-100 text-emerald-800' : o.status === 'Cancelled' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}">
+                            ${o.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleVendorTab(subtab) {
+            const invView = document.getElementById('vendor-subview-inventory');
+            const ordView = document.getElementById('vendor-subview-orders');
+            const btnInv = document.getElementById('tab-btn-inventory');
+            const btnOrd = document.getElementById('tab-btn-orders');
+
+            if (subtab === 'inventory') {
+                invView.classList.remove('hidden');
+                ordView.classList.add('hidden');
+                btnInv.className = "text-sm font-bold text-emerald-950 border-b-2 border-emerald-950 pb-1";
+                btnOrd.className = "text-sm font-medium text-gray-500 hover:text-gray-800 pb-1";
+            } else {
+                ordView.classList.remove('hidden');
+                invView.classList.add('hidden');
+                btnOrd.className = "text-sm font-bold text-emerald-950 border-b-2 border-emerald-950 pb-1";
+                btnInv.className = "text-sm font-medium text-gray-500 hover:text-gray-800 pb-1";
+            }
+        }
+
+        function openAddProductModal() {
+            document.getElementById('add-product-modal').classList.remove('hidden');
+        }
+
+        function closeAddProductModal() {
+            document.getElementById('add-product-modal').classList.add('hidden');
+        }
+
+        function handleAddProductSubmit(e) {
+            e.preventDefault();
+            const newP = {
+                id: 'ZH-' + Math.floor(100 + Math.random() * 900),
+                title: document.getElementById('new-title').value,
+                category: document.getElementById('new-category').value,
+                price: parseInt(document.getElementById('new-price').value),
+                vendor: 'Anarkali Heritage Jewellers',
+                city: document.getElementById('new-city').value,
+                stock: parseInt(document.getElementById('new-stock').value),
+                image: document.getElementById('new-image').value,
+                searches: 100,
+                sales: 0,
+                recPrice: 'Optimal'
+            };
+            products.unshift(newP);
+            closeAddProductModal();
+            renderVendorViews();
+            renderStorefrontProducts();
+            alert('Listing successfully created and updated in marketplace storefront!');
+        }
+
+
+        async function fetchGeminiReport(promptText) {
+            const apiKey = ""; // Canvas runtime environment automatically supplies the key when empty
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const systemPrompt = "You are ZewarHub's Chief Artificial Intelligence Analytics Agent for Pakistani Jewellery Marketplaces. Generate structured, professional Markdown reports analyzing sales, demand gaps, return fraud reasons, regional trends, and price optimizations in PKR.";
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+
+                const data = await response.json();
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    return data.candidates[0].content.parts[0].text;
+                }
+            } catch (err) {
+                console.log("API Fetch Fallback activated:", err);
+            }
+
+            // High-quality pre-formatted Markdown fallback response
+            return `
+# 💎 ZewarHub Pakistan AI Platform Executive Audit Report
+**Generated for:** Super-Admin Command & Vendor Operations
+**Market Coverage:** Karachi, Lahore, Peshawar, Rawalpindi, Islamabad
+
+---
+
+### 1. Executive Sales & Revenue Breakdown
+* **Gross Platform Merchandise Value (GMV):** PKR 4,850,000
+* **Fulfilled Orders Rate:** 94.2% across 48 registered shops.
+* **Average Order Value (AOV):** PKR 6,800 per customer transaction.
+
+### 2. High Demand Gap Analysis (Most Selling vs Most Searched)
+* **Most Selling Article:** *Polki Diamond & Zircon Earrings* (110 units sold).
+* **Most Searched Article:** *Velvet Bottle Green Kundan Choker Sets* (4,200 search queries).
+* **Deficit Alert:** Supply shortage detected in Islamabad & Lahore shops for velvet green bridal sets for upcoming Mehendi season. Sellers are advised to boost stock by +40%.
+
+### 3. Cancelled Orders & Fraud / Return Reason Diagnostics
+* **Total Cancelled Orders:** 5.8% (Mainly Cash on Delivery orders).
+* **Primary Return Reason:** Transit breakage during shipment from Peshawar to Karachi due to fragile Kundan glass stones.
+* **AI Corrective Action:** Enforce rigid bubble wrap & wooden box packaging guidelines for all Khyber Craft Studio listings.
+
+### 4. AI Price Optimization Advice
+* **Zircon Bridal Headbands:** Reduce list price from 12,000 PKR to **9,500 PKR** to unlock a projected 3.2x conversion surge during Q4 wedding months.
+            `.trim();
+        }
+
+        async function runMasterAiAudit() {
+            const container = document.getElementById('ai-report-container');
+            container.innerHTML = `<p class="text-gold-300 font-bold animate-pulse">⏳ Gemini 3 Flash AI is synthesizing platform-wide telemetry, customer searches, cancellation reasons, and regional sales...</p>`;
+
+            const report = await fetchGeminiReport("Analyze current platform sales in Lahore and Karachi, customer search terms vs stock availability, cancellation reasons, and provide pricing strategies.");
+            
+            // Format basic markdown headers for HTML display
+            const formatted = report
+                .replace(/# (.*)/g, '<h1 class="text-lg font-bold text-gold-300 mt-2">$1</h1>')
+                .replace(/### (.*)/g, '<h3 class="text-sm font-bold text-emerald-300 mt-2">$1</h3>')
+                .replace(/\* (.*)/g, '<li class="ml-4 list-disc text-gray-300">$1</li>');
+
+            container.innerHTML = formatted;
+        }
+
+        async function generateVendorAiReport() {
+            switchTab('admin');
+            await runMasterAiAudit();
+        }
+
+        function copyAiReportText() {
+            const text = document.getElementById('ai-report-container').innerText;
+            navigator.clipboard.writeText(text);
+            alert('AI Intelligence Report copied to clipboard!');
+        }
+
+
+        function toggleAiChat() {
+            const modal = document.getElementById('ai-chat-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function openAiChat(prompt) {
+            document.getElementById('ai-chat-modal').classList.remove('hidden');
+            sendQuickPrompt(prompt);
+        }
+
+        function sendQuickPrompt(text) {
+            document.getElementById('chat-input').value = text;
+            sendChatMessage();
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chatMessages = document.getElementById('chat-messages');
+            
+            // Append User Message
+            chatMessages.innerHTML += `
+                <div class="bg-gold-500/20 text-gold-300 p-2.5 rounded-xl border border-gold-500/30 ml-8 text-right">
+                    ${text}
+                </div>
+            `;
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Loading indicator
+            const loadingId = 'loading-' + Date.now();
+            chatMessages.innerHTML += `
+                <div id="${loadingId}" class="bg-emerald-900/60 p-2.5 rounded-xl border border-gold-500/20 text-gray-400 text-[11px] animate-pulse">
+                    Stylist AI is scanning artificial jewellery listings...
+                </div>
+            `;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simple intelligent response generator based on query keywords
+            setTimeout(() => {
+                const loader = document.getElementById(loadingId);
+                let response = "I found these gorgeous pieces matching your style preference!";
+                
+                if (text.toLowerCase().includes('kundan') || text.toLowerCase().includes('8,000') || text.toLowerCase().includes('8k')) {
+                    response = "I recommend our **Royal Anarkali Emerald Kundan Set** (PKR 14,500) or traditional **Gold-Plated Matha Patti** (PKR 5,400) from Lahore Artisans!";
+                } else if (text.toLowerCase().includes('green') || text.toLowerCase().includes('mehendi')) {
+                    response = "For Mehendi, the **Deep Green Velvet Royal Choker Set** (PKR 6,500) from Islamabad Luxury Studio is currently trending across Pakistan!";
+                } else if (text.toLowerCase().includes('zircon') || text.toLowerCase().includes('earrings')) {
+                    response = "Check out the **Polki Diamond & Zircon Drop Earrings** (PKR 3,200) - lightweight and high shine!";
+                }
+
+                if (loader) {
+                    loader.outerHTML = `
+                        <div class="bg-emerald-900/80 p-3 rounded-xl border border-gold-500/30 text-gray-200">
+                            ${response}
+                        </div>
+                    `;
+                }
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 800);
+        }
+
+
+        function openTryOnModal() {
+            document.getElementById('tryon-modal').classList.remove('hidden');
+            
+            // Populate Jewellery selector list inside TryOn
+            const list = document.getElementById('tryon-item-list');
+            list.innerHTML = products.map(p => `
+                <div onclick="setTryOnJewel('${p.image}')" class="flex items-center space-x-2 bg-emerald-900/40 p-2 rounded-lg border border-gold-500/20 hover:border-gold-400 cursor-pointer">
+                    <img src="${p.image}" class="w-10 h-10 object-cover rounded">
+                    <div>
+                        <p class="text-xs font-bold text-white line-clamp-1">${p.title}</p>
+                        <p class="text-[10px] text-gold-300">PKR ${p.price.toLocaleString()}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openTryOnWithItem(imgUrl) {
+            openTryOnModal();
+            setTryOnJewel(imgUrl);
+        }
+
+        function closeTryOnModal() {
+            document.getElementById('tryon-modal').classList.add('hidden');
+        }
+
+        function changeModel(src) {
+            document.getElementById('model-img').src = src;
+        }
+
+        function setTryOnJewel(src) {
+            document.getElementById('overlay-jewel-img').src = src;
+        }
+
+        function adjustJewelScale(val) {
+            document.getElementById('draggable-jewel').style.width = `${val}px`;
+        }
+
+        function resetJewelPosition() {
+            const j = document.getElementById('draggable-jewel');
+            j.style.top = '50%';
+            j.style.left = '50%';
+        }
+
+        // Draggable setup for Virtual Try-On Overlay
+        (function setupDraggable() {
+            const elem = document.getElementById('draggable-jewel');
+            let isDragging = false, startX, startY, initialLeft, initialTop;
+
+            if (!elem) return;
+
+            elem.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialLeft = elem.offsetLeft;
+                initialTop = elem.offsetTop;
+                e.preventDefault();
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                elem.style.left = `${initialLeft + dx}px`;
+                elem.style.top = `${initialTop + dy}px`;
+            });
+
+            window.addEventListener('mouseup', () => { isDragging = false; });
+        })();
+
+
+        let chartRegional = null;
+        let chartDemand = null;
+
+        function initAdminCharts() {
+            if (chartRegional) chartRegional.destroy();
+            if (chartDemand) chartDemand.destroy();
+
+            // Regional Sales Chart
+            const ctx1 = document.getElementById('chart-regional').getContext('2d');
+            chartRegional = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Lahore', 'Karachi', 'Peshawar', 'Islamabad', 'Multan'],
+                    datasets: [{
+                        label: 'Gross Sales (PKR Thousands)',
+                        data: [1850, 1420, 890, 950, 420],
+                        backgroundColor: '#d4af37',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                        x: { ticks: { color: '#9ca3af' }, grid: { display: false } }
+                    }
+                }
+            });
+
+            // Demand Gap Chart
+            const ctx2 = document.getElementById('chart-demand-gap').getContext('2d');
+            chartDemand = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['Bridal Sets', 'Zircon Earrings', 'Bangles', 'Velvet Chokers', 'Matha Patti'],
+                    datasets: [
+                        {
+                            label: 'Customer Searches',
+                            data: [1200, 3100, 890, 4200, 1800],
+                            borderColor: '#38bdf8',
+                            backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Actual Unit Sales',
+                            data: [420, 1100, 680, 950, 340],
+                            borderColor: '#d4af37',
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#d1d5db', font: { size: 10 } } } },
+                    scales: {
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                        x: { ticks: { color: '#9ca3af' }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+
+        function openPitchModal() {
+            document.getElementById('pitch-modal').classList.remove('hidden');
+        }
+
+        function closePitchModal() {
+            document.getElementById('pitch-modal').classList.add('hidden');
+        }
+
+
+        window.onload = function() {
+            renderStorefrontProducts();
+            updateCartUI();
+        };
+    </script>
+</body>
+</html>
